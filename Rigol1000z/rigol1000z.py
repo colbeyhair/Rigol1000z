@@ -1,7 +1,7 @@
 import os
 import numpy as _np
 import tqdm as _tqdm
-import visa as _visa
+import pyvisa as _visa
 
 class _Rigol1000zChannel:
     '''
@@ -273,13 +273,13 @@ class Rigol1000z:
     def visa_read(self):
         return self.visa_resource.read().strip()
 
-    def visa_read_raw(self, num_bytes=-1):
+    def visa_read_raw(self, num_bytes=None):
         return self.visa_resource.read_raw(num_bytes)
 
     def visa_ask(self, cmd):
         return self.visa_resource.query(cmd)
 
-    def visa_ask_raw(self, cmd, num_bytes=-1):
+    def visa_ask_raw(self, cmd, num_bytes=None):
         self.visa_write(cmd)
         return self.visa_read_raw(num_bytes)
 
@@ -347,7 +347,7 @@ class Rigol1000z:
 
     def set_memory_depth(self, pts):
         num_enabled_chans = sum(self.get_channels_enabled())
-        
+
         pts = int(pts) if pts != 'AUTO' else pts
 
         if num_enabled_chans == 1:
@@ -359,7 +359,7 @@ class Rigol1000z:
 
         self.run()
         self.visa_write(':acq:mdep %s' % pts)
-        
+
     def get_channels_enabled(self):
         return [c.enabled() for c in self._channels]
 
