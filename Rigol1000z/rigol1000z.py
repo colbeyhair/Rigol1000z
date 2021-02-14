@@ -337,6 +337,9 @@ class Rigol1000z:
         }
         return modes[self.visa_ask(':acq:type?')]
 
+    def get_trigger_status(self):
+        return self.visa_ask(':TRIGger:STATus?').lower().strip()
+
     def get_sampling_rate(self):
         return float(self.visa_ask(':acq:srat?'))
 
